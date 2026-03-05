@@ -1,5 +1,5 @@
-import DocsShell from "../../../components/docs-shell";
-import { getAllDocs, getDefaultDoc, getDocBySlug } from "../../../lib/docs";
+import DocsShell from "../../../../components/docs-shell";
+import { getAllDocs, getDefaultDoc, getDocBySlug } from "../../../../lib/docs";
 
 export function generateStaticParams() {
   const docs = getAllDocs();
@@ -15,8 +15,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function DocsPage({ params }) {
+export default async function DocsEnPage({ params }) {
   const resolvedParams = await params;
   const slugParts = resolvedParams?.slug ?? [];
-  return <DocsShell lang="ko" slugParts={slugParts} />;
+  return <DocsShell lang="en" slugParts={slugParts} />;
 }

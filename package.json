@@ -33,8 +33,14 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.39.3",
     "eslint-config-next": "^16.1.6",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "wrangler": "^4.50.0"
   }
 }
