@@ -1,149 +1,364 @@
 import Link from "next/link";
+import ThemeToggleButton from "../components/theme-toggle-button";
 
-const quickStartPath = [
-  {
-    step: "01",
-    title: "설치",
-    body: "./shell/install-global.sh 또는 로컬 빌드로 cotor 실행 파일을 준비합니다."
-  },
-  {
-    step: "02",
-    title: "초기화",
-    body: "cotor init --interactive로 기본 설정 파일(cotor.yaml)을 생성합니다."
-  },
-  {
-    step: "03",
-    title: "검증 + 드라이런",
-    body: "validate, --dry-run으로 실행 전 에이전트 구성과 파이프라인 흐름을 확인합니다."
-  },
-  {
-    step: "04",
-    title: "실행 + 관찰",
-    body: "run --watch, stats, doctor, dash/web까지 이어서 운영 상태를 점검합니다."
-  }
-];
-
-const runModes = [
-  {
-    label: "SEQUENTIAL",
-    description: "단계별 순차 실행. 가장 읽기 쉽고 디버깅이 간단합니다."
-  },
-  {
-    label: "PARALLEL",
-    description: "독립 작업 동시 실행. 비교/수집 워크로드에 적합합니다."
-  },
-  {
-    label: "DAG",
-    description: "의존성 기반 그래프 실행. 복합 파이프라인 오케스트레이션용입니다."
-  },
-  {
-    label: "DECISION + LOOP",
-    description: "조건 기반 분기와 반복 개선 루프를 한 파이프라인에서 처리합니다."
-  },
-  {
-    label: "MAP/FAN-OUT",
-    description: "대량 입력을 fan-out 처리한 뒤 단계적으로 집계합니다."
-  }
-];
-
-const commandSnippet = `# install
+const quickStartCommands = `git clone https://github.com/heodongun/cotor.git
+cd cotor
 ./shell/install-global.sh
 cotor version
 
-# initialize
 cotor init --interactive
 cotor template compare my-pipeline.yaml --fill prompt="Write tests"
-
-# validate and run
 cotor validate compare-solutions -c my-pipeline.yaml
 cotor run compare-solutions -c my-pipeline.yaml --dry-run
 cotor run compare-solutions -c my-pipeline.yaml --watch --output-format text
-
-# observe
 cotor stats
-cotor doctor
-cotor dash -c my-pipeline.yaml`;
+cotor doctor`;
+
+const configExample = `version: "1.0"
+
+agents:
+  - name: my-agent
+    pluginClass: com.cotor.data.plugin.ClaudePlugin
+    timeout: 60000
+    parameters:
+      model: claude-3-sonnet
+    tags: [ai, claude]
+
+pipelines:
+  - name: compare-solutions
+    description: "여러 에이전트 답변 비교"
+    executionMode: PARALLEL
+    stages:
+      - id: answer
+        agent: { name: my-agent }
+        input: "Kotlin 코루틴 테스트 코드 작성"
+
+security:
+  useWhitelist: true
+  allowedExecutables: [claude, gemini, codex]
+
+logging:
+  level: INFO
+  file: cotor.log`;
 
 export default function Home() {
   return (
-    <div className="site-shell">
-      <header className="top-nav fade-in">
-        <Link href="/" className="brand">
-          <span className="brand-dot" />
-          <span>Cotor Guide</span>
-        </Link>
-        <nav className="top-links">
-          <Link href="/docs">Documentation</Link>
-          <a href="https://github.com/heodongun/cotor" target="_blank" rel="noreferrer">
-            GitHub
-          </a>
-        </nav>
-      </header>
-
-      <main className="home-main">
-        <section className="hero-card slide-up">
-          <p className="hero-badge">AI CLI Master-Agent System</p>
-          <h1>Cotor 사용법을 빠르게 시작하는 운영형 문서 사이트</h1>
-          <p className="hero-description">
-            이 사이트는 <code>https://github.com/heodongun/cotor</code> 레포의 실사용 경로를
-            기준으로 설치, 템플릿, 검증, 실행, 모니터링까지 한 번에 안내합니다.
-          </p>
-          <div className="hero-actions">
-            <Link href="/docs" className="btn-primary">
-              문서 대시보드 열기
+    <div className="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen flex flex-col">
+      <header className="border-b border-border-light dark:border-border-dark bg-background-light dark:bg-surface-dark z-50 py-3">
+        <div className="px-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button className="md:hidden text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark">
+              <span className="material-symbols-outlined">menu</span>
+            </button>
+            <Link className="flex items-center gap-2" href="/">
+              <svg
+                aria-hidden="true"
+                className="fill-current text-text-light dark:text-text-dark"
+                height="32"
+                viewBox="0 0 16 16"
+                width="32"
+              >
+                <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
+              </svg>
+              <span className="font-semibold text-lg tracking-tight">Cotor Guide</span>
             </Link>
+            <div className="hidden md:flex items-center border border-border-light dark:border-border-dark rounded-md px-2 py-1 bg-surface-light dark:bg-background-dark text-sm text-text-muted-light dark:text-text-muted-dark w-64 focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all">
+              <span className="material-symbols-outlined text-[16px] mr-1">search</span>
+              <input
+                className="bg-transparent border-none outline-none w-full text-text-light dark:text-text-dark text-sm p-0 focus:ring-0"
+                placeholder="Type / to search"
+                type="text"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-sm font-medium">
+            <ThemeToggleButton
+              className="p-1 rounded-md text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+              iconClass="material-symbols-outlined"
+            />
             <a
-              className="btn-secondary"
+              className="hidden sm:block hover:text-primary transition-colors"
               href="https://github.com/heodongun/cotor"
               target="_blank"
               rel="noreferrer"
             >
-              레포 바로가기
+              GitHub
+            </a>
+            <Link
+              className="border border-border-light dark:border-border-dark bg-surface-light dark:bg-border-dark text-text-light dark:text-text-dark px-3 py-1 rounded-md hover:bg-border-light dark:hover:bg-border-dark transition-colors"
+              href="/docs"
+            >
+              Docs Dashboard
+            </Link>
+          </div>
+        </div>
+        <div className="border-t border-border-light dark:border-border-dark mt-3 pt-3 px-4 md:hidden">
+          <nav className="flex overflow-x-auto gap-4 text-sm font-medium text-text-muted-light dark:text-text-muted-dark pb-1">
+            <a
+              className="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1"
+              href="#core"
+            >
+              Core
+            </a>
+            <a
+              className="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1"
+              href="#quickstart"
+            >
+              Quick Start
+            </a>
+            <a
+              className="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1"
+              href="#config"
+            >
+              Config
+            </a>
+            <a
+              className="whitespace-nowrap text-text-light dark:text-text-dark border-b-2 border-primary pb-1 font-semibold"
+              href="/docs"
+            >
+              Dashboard
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <div className="flex flex-1 max-w-[1400px] w-full mx-auto">
+        <aside className="w-64 border-r border-border-light dark:border-border-dark hidden md:block flex-shrink-0 bg-background-light dark:bg-background-dark py-6 px-4 overflow-y-auto sidebar-scroll">
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-2">
+              Getting Started
+            </h3>
+            <ul className="space-y-1">
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md bg-surface-light dark:bg-surface-dark font-medium text-text-light dark:text-text-dark border-l-2 border-primary"
+                  href="#core"
+                >
+                  Core Workflow
+                </a>
+              </li>
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark"
+                  href="#quickstart"
+                >
+                  Quick Start Commands
+                </a>
+              </li>
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark"
+                  href="#config"
+                >
+                  Configuration
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-2">
+              Operations
+            </h3>
+            <ul className="space-y-1">
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark"
+                  href="#modes"
+                >
+                  Execution Modes
+                </a>
+              </li>
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark"
+                  href="#examples"
+                >
+                  Example Pipelines
+                </a>
+              </li>
+              <li>
+                <a
+                  className="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark"
+                  href="#troubleshooting"
+                >
+                  Troubleshooting
+                </a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <main className="flex-1 min-w-0 py-6 px-4 md:px-8 lg:px-12 markdown-body">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark mb-4">
+              <a className="hover:underline hover:text-primary" href="https://github.com/heodongun/cotor">
+                cotor
+              </a>
+              <span>/</span>
+              <span>docs</span>
+              <span>/</span>
+              <span className="font-semibold text-text-light dark:text-text-dark">guide-overview.md</span>
+            </div>
+
+            <h1 className="flex items-center gap-2" id="core">
+              <span className="material-symbols-outlined text-primary">menu_book</span>
+              Cotor Docs: Core Workflow
+            </h1>
+            <p>
+              Cotor는 여러 AI CLI(claude, gemini, codex 등)를 하나의 파이프라인으로 오케스트레이션하는
+              Kotlin 기반 CLI입니다. 설치 후 실제 팀에서 가장 많이 쓰는 흐름은{" "}
+              <code>init → template → validate → run → stats/doctor</code> 순서입니다.
+            </p>
+
+            <h2 id="modes">Execution Architecture</h2>
+            <p>
+              실행 모드는 <strong>SEQUENTIAL</strong>, <strong>PARALLEL</strong>, <strong>DAG</strong>를
+              기본으로 하고, 조건 분기/반복(DECISION + LOOP), fan-out(map) 스타일까지 지원합니다.
+              복잡한 워크플로우를 단계 단위로 분해하고 의존성을 검증한 뒤 실행합니다.
+            </p>
+            <div className="my-6 border border-border-light dark:border-border-dark rounded-lg p-6 bg-surface-light dark:bg-surface-dark">
+              <p className="mb-2 font-semibold">권장 운영 흐름</p>
+              <ol className="list-decimal pl-6 space-y-1 text-sm">
+                <li>템플릿 생성: <code>cotor template compare ...</code></li>
+                <li>정적 검증: <code>cotor validate ...</code></li>
+                <li>시뮬레이션: <code>cotor run ... --dry-run</code></li>
+                <li>실행 모니터링: <code>cotor run ... --watch</code></li>
+                <li>운영 점검: <code>cotor stats</code>, <code>cotor doctor</code></li>
+              </ol>
+            </div>
+
+            <h3>오케스트레이터가 처리하는 핵심 작업</h3>
+            <ul>
+              <li>파이프라인 단계 분해 및 의존성 해석</li>
+              <li>에이전트/플러그인 라우팅 및 실행 순서 제어</li>
+              <li>실패 복구를 위한 체크포인트 저장 및 재개</li>
+              <li>출력 포맷 변환(json/csv/text) 및 결과 분석</li>
+              <li>보안 화이트리스트 기반 실행 전 검증</li>
+            </ul>
+
+            <h2 id="quickstart">Quick Start Commands</h2>
+            <p>
+              아래 블록은 <code>README.ko.md</code> + <code>docs/QUICK_START.md</code> 기준으로 바로
+              실행 가능한 최소 경로입니다.
+            </p>
+            <div className="code-block mt-4 mb-8">
+              <div className="bg-border-light dark:bg-border-dark px-4 py-2 flex items-center justify-between text-xs text-text-muted-light dark:text-text-muted-dark rounded-t-md">
+                <span>terminal</span>
+              </div>
+              <pre className="!rounded-t-none !mb-0 !bg-transparent">
+                <code className="language-bash text-text-light dark:text-text-dark">{quickStartCommands}</code>
+              </pre>
+            </div>
+
+            <h2 id="config">cotor.yaml Example</h2>
+            <p>
+              기본 설정은 <code>cotor.yaml</code>에 두고, 환경별 오버라이드는 <code>.cotor/*.yaml</code>을
+              이름순으로 병합해 사용합니다(나중 파일 우선).
+            </p>
+            <div className="code-block mt-4 mb-8">
+              <div className="bg-border-light dark:bg-border-dark px-4 py-2 flex items-center justify-between text-xs text-text-muted-light dark:text-text-muted-dark rounded-t-md">
+                <span>cotor.yaml</span>
+              </div>
+              <pre className="!rounded-t-none !mb-0 !bg-transparent">
+                <code className="language-yaml text-text-light dark:text-text-dark">{configExample}</code>
+              </pre>
+            </div>
+
+            <h2 id="examples">실전 예제 파이프라인</h2>
+            <ul>
+              <li>
+                단일 실행: <code>./shell/cotor run single-agent -c examples/single-agent.yaml</code>
+              </li>
+              <li>
+                병렬 비교: <code>./shell/cotor run parallel-compare -c examples/parallel-compare.yaml</code>
+              </li>
+              <li>
+                개선 루프: <code>./shell/cotor run decision-loop -c examples/decision-loop.yaml</code>
+              </li>
+              <li>
+                DAG 실행: <code>./shell/cotor run complex-dag-pipeline -c examples/complex_dag_pipeline.yaml</code>
+              </li>
+            </ul>
+
+            <h2 id="troubleshooting">Troubleshooting</h2>
+            <ul>
+              <li>실행 전 항상 <code>cotor validate</code>와 <code>--dry-run</code>으로 구조를 확인</li>
+              <li>
+                환경 이슈는 <code>cotor doctor</code>, 상세 스택은 <code>--debug</code>로 점검
+              </li>
+              <li>
+                빠른 도움말: <code>cotor --short</code>, 전체 명령: <code>cotor --help</code>
+              </li>
+            </ul>
+          </div>
+        </main>
+
+        <aside className="w-64 hidden lg:block flex-shrink-0 py-6 px-4">
+          <h4 className="text-xs font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-3">
+            On this page
+          </h4>
+          <ul className="text-sm space-y-2 text-text-muted-light dark:text-text-muted-dark border-l border-border-light dark:border-border-dark pl-3">
+            <li>
+              <a className="hover:text-primary transition-colors block" href="#core">
+                Core Workflow
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors block" href="#modes">
+                Execution Architecture
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors block" href="#quickstart">
+                Quick Start Commands
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors block" href="#config">
+                cotor.yaml Example
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors block" href="#troubleshooting">
+                Troubleshooting
+              </a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+
+      <footer className="border-t border-border-light dark:border-border-dark py-8 mt-auto">
+        <div className="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-xs text-text-muted-light dark:text-text-muted-dark gap-4">
+          <div className="flex items-center gap-2">
+            <svg
+              aria-hidden="true"
+              className="fill-current text-text-muted-light dark:text-text-muted-dark opacity-50"
+              height="24"
+              viewBox="0 0 16 16"
+              width="24"
+            >
+              <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
+            </svg>
+            <span>© 2026 Cotor Guide</span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              className="hover:text-primary transition-colors"
+              href="https://github.com/heodongun/cotor"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Repository
+            </a>
+            <Link className="hover:text-primary transition-colors" href="/docs">
+              Documentation Dashboard
+            </Link>
+            <a className="hover:text-primary transition-colors" href="https://github.com/heodongun/cotor/issues">
+              Issues
             </a>
           </div>
-        </section>
-
-        <section className="panel slide-up delay-1">
-          <div className="section-title-row">
-            <h2>5분 스타트 경로</h2>
-            <span>docs/QUICK_START.md 기반</span>
-          </div>
-          <div className="step-grid">
-            {quickStartPath.map((item) => (
-              <article key={item.step} className="step-card">
-                <p className="step-number">{item.step}</p>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel slide-up delay-2">
-          <div className="section-title-row">
-            <h2>핵심 실행 명령</h2>
-            <span>복사 후 바로 실행 가능한 기본 플로우</span>
-          </div>
-          <pre className="code-block">
-            <code>{commandSnippet}</code>
-          </pre>
-        </section>
-
-        <section className="panel slide-up delay-3">
-          <div className="section-title-row">
-            <h2>워크플로우 실행 모드</h2>
-            <span>상황에 맞는 파이프라인 패턴 선택</span>
-          </div>
-          <div className="mode-grid">
-            {runModes.map((mode) => (
-              <article key={mode.label} className="mode-card">
-                <p className="mode-label">{mode.label}</p>
-                <p>{mode.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </main>
+        </div>
+      </footer>
     </div>
   );
 }

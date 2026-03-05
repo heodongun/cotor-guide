@@ -3,6 +3,9 @@
 `cotor` 사용법을 설명하는 문서 사이트입니다.  
 정적 `Next.js` 빌드(`out/`)로 Cloudflare Pages에 배포하도록 구성했습니다.
 
+- `/` 경로: Stitch `Cotor Landing Page Hero` 디자인을 JSX로 재구성하고 실제 가이드 콘텐츠 반영
+- `/docs` 경로: Stitch `Cotor Documentation Dashboard` 디자인을 JSX로 재구성하고 운영 문서 반영
+
 ## Local
 
 ```bash
