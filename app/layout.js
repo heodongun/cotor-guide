@@ -3,7 +3,12 @@ import Script from "next/script";
 
 export const metadata = {
   title: "Cotor Guide",
-  description: "Cotor 사용법과 워크플로우를 정리한 공식 가이드 사이트"
+  description: "Cotor 사용법과 워크플로우를 정리한 공식 가이드 사이트",
+  icons: {
+    icon: "/cotor.svg",
+    shortcut: "/cotor.svg",
+    apple: "/cotor.svg"
+  }
 };
 
 export default function RootLayout({ children }) {

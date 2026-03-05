@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "sync:docs": "rsync -av /Users/Projects/cotor-organization/cotor/docs/ ./content/cotor-docs/docs/ && cp /Users/Projects/cotor-organization/cotor/README.md ./content/cotor-docs/README.md && cp /Users/Projects/cotor-organization/cotor/README.ko.md ./content/cotor-docs/README.ko.md",
     "cf:whoami": "wrangler whoami",
     "cf:preview": "npm run build && wrangler pages dev out",
     "cf:deploy": "npm run build && wrangler pages deploy out --project-name cotor-guide"
@@ -23,9 +24,13 @@
   },
   "homepage": "https://github.com/heodongun/cotor-guide#readme",
   "dependencies": {
+    "github-slugger": "^2.0.0",
     "next": "^16.1.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "eslint": "^9.39.3",

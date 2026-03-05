@@ -98,6 +98,11 @@ body {
   border: 0;
   padding: 0;
   border-radius: 0;
+  color: #1f2328 !important;
+}
+
+.dark .markdown-body pre code {
+  color: #e6edf3 !important;
 }
 
 .sidebar-scroll::-webkit-scrollbar {
@@ -111,4 +116,32 @@ body {
 .sidebar-scroll::-webkit-scrollbar-thumb {
   background-color: rgba(156, 163, 175, 0.5);
   border-radius: 4px;
+}
+
+.docs-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d0d7de;
+  margin: 1rem 0;
+}
+
+.docs-table th,
+.docs-table td {
+  border: 1px solid #d0d7de;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.docs-table thead th {
+  background: #f6f8fa;
+}
+
+.dark .docs-table,
+.dark .docs-table th,
+.dark .docs-table td {
+  border-color: #30363d;
+}
+
+.dark .docs-table thead th {
+  background: #161b22;
 }
