@@ -1,0 +1,35 @@
+{
+  "name": "cotor-guide",
+  "version": "1.0.0",
+  "description": "Cotor usage guide website built with Next.js for Cloudflare Pages.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "cf:whoami": "wrangler whoami",
+    "cf:preview": "npm run build && wrangler pages dev out",
+    "cf:deploy": "npm run build && wrangler pages deploy out --project-name cotor-guide"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heodongun/cotor-guide.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heodongun/cotor-guide/issues"
+  },
+  "homepage": "https://github.com/heodongun/cotor-guide#readme",
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.3",
+    "eslint-config-next": "^16.1.6",
+    "wrangler": "^4.50.0"
+  }
+}

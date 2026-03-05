@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cotor Docs: Core Concepts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0969da", // GitHub Blue
+                        secondary: "#2da44e", // GitHub Green
+                        "background-light": "#ffffff",
+                        "background-dark": "#0d1117", // GitHub Dark background
+                        "surface-light": "#f6f8fa", // GitHub light grey surface
+                        "surface-dark": "#161b22", // GitHub dark surface
+                        "border-light": "#d0d7de",
+                        "border-dark": "#30363d",
+                        "text-light": "#1f2328",
+                        "text-dark": "#e6edf3",
+                        "text-muted-light": "#656d76",
+                        "text-muted-dark": "#848d97"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Helvetica", "Arial", "sans-serif"],
+                        mono: ["ui-monospace", "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "6px",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        .code-block {
+            background-color: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+        }
+        .dark .code-block {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+        }.markdown-body h1 {
+            @apply text-3xl font-bold pb-2 border-b border-border-light dark:border-border-dark mb-4 mt-6;
+        }
+        .markdown-body h2 {
+            @apply text-2xl font-semibold pb-2 border-b border-border-light dark:border-border-dark mb-4 mt-6;
+        }
+        .markdown-body h3 {
+            @apply text-xl font-semibold mb-4 mt-6;
+        }
+        .markdown-body p {
+            @apply mb-4 leading-relaxed;
+        }
+        .markdown-body ul {
+            @apply list-disc pl-8 mb-4;
+        }
+        .markdown-body li {
+            @apply mb-1;
+        }
+        .markdown-body pre {
+            @apply p-4 rounded-md overflow-x-auto mb-4 text-sm code-block;
+        }
+        .markdown-body code {
+            @apply font-mono text-sm bg-surface-light dark:bg-surface-dark px-1.5 py-0.5 rounded border border-border-light dark:border-border-dark;
+        }
+        .markdown-body pre code {
+            @apply bg-transparent p-0 border-0 rounded-none text-text-light dark:text-text-dark;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans antialiased transition-colors duration-200 min-h-screen flex flex-col">
+<header class="border-b border-border-light dark:border-border-dark bg-background-light dark:bg-surface-dark z-50 py-3">
+<div class="px-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<a class="flex items-center gap-2" href="#">
+<svg aria-hidden="true" class="fill-current text-text-light dark:text-text-dark" data-view-component="true" height="32" version="1.1" viewBox="0 0 16 16" width="32">
+<path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+</svg>
+<span class="font-semibold text-lg tracking-tight">Cotor</span>
+</a>
+<div class="hidden md:flex items-center border border-border-light dark:border-border-dark rounded-md px-2 py-1 bg-surface-light dark:bg-background-dark text-sm text-text-muted-light dark:text-text-muted-dark w-64 focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-[16px] mr-1">search</span>
+<input class="bg-transparent border-none outline-none w-full text-text-light dark:text-text-dark text-sm p-0 focus:ring-0" placeholder="Type / to search" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium">
+<button class="p-1 rounded-md text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors" id="theme-toggle">
+<span class="material-symbols-outlined dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined hidden dark:block">light_mode</span>
+</button>
+<a class="hidden sm:block hover:text-primary transition-colors" href="#">Sign In</a>
+<a class="border border-border-light dark:border-border-dark bg-surface-light dark:bg-border-dark text-text-light dark:text-text-dark px-3 py-1 rounded-md hover:bg-border-light dark:hover:bg-border-dark transition-colors" href="#">Sign Up</a>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark mt-3 pt-3 px-4 md:hidden">
+<nav class="flex overflow-x-auto gap-4 text-sm font-medium text-text-muted-light dark:text-text-muted-dark pb-1">
+<a class="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1" href="#">Code</a>
+<a class="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1" href="#">Issues</a>
+<a class="whitespace-nowrap hover:text-text-light dark:hover:text-text-dark border-b-2 border-transparent hover:border-border-dark pb-1" href="#">Pull requests</a>
+<a class="whitespace-nowrap text-text-light dark:text-text-dark border-b-2 border-primary pb-1 font-semibold" href="#">Wiki</a>
+</nav>
+</div>
+</header>
+<div class="flex flex-1 max-w-[1400px] w-full mx-auto">
+<aside class="w-64 border-r border-border-light dark:border-border-dark hidden md:block flex-shrink-0 bg-background-light dark:bg-background-dark py-6 px-4 overflow-y-auto">
+<div class="mb-4">
+<h3 class="text-sm font-semibold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-2">Documentation</h3>
+<ul class="space-y-1">
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">Getting Started</a>
+</li>
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md bg-surface-light dark:bg-surface-dark font-medium text-text-light dark:text-text-dark border-l-2 border-primary" href="#">Core Concepts</a>
+</li>
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">Configuration</a>
+</li>
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">Examples</a>
+</li>
+</ul>
+</div>
+<div class="mb-4">
+<h3 class="text-sm font-semibold text-text-muted-light dark:text-text-muted-dark uppercase tracking-wider mb-2">API Reference</h3>
+<ul class="space-y-1">
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">Master Agent API</a>
+</li>
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">Worker Node API</a>
+</li>
+<li>
+<a class="block px-2 py-1.5 text-sm rounded-md hover:bg-surface-light dark:hover:bg-surface-dark text-text-light dark:text-text-dark" href="#">CLI Commands</a>
+</li>
+</ul>
+</div>
+</aside>
+<main class="flex-1 min-w-0 py-6 px-4 md:px-8 lg:px-12 markdown-body">
+<div class="max-w-4xl mx-auto">
+<div class="flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark mb-4">
+<a class="hover:underline hover:text-primary" href="#">cotor-repo</a>
+<span>/</span>
+<a class="hover:underline hover:text-primary" href="#">docs</a>
+<span>/</span>
+<span class="font-semibold text-text-light dark:text-text-dark">core-concepts.md</span>
+</div>
+<h1 class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">menu_book</span>
+                    Core Concepts
+                </h1>
+<p>Understanding the architecture of Cotor is essential for building scalable multi-agent systems. The system revolves around two primary entities: the <strong>Master Agent</strong> and <strong>Worker Nodes</strong>.</p>
+<h2>Architecture Overview</h2>
+<p>The Master Agent acts as the orchestrator, receiving complex tasks and decomposing them into sub-tasks. It then routes these sub-tasks to specialized Worker Nodes based on their defined capabilities and current load.</p>
+<div class="my-6 border border-border-light dark:border-border-dark rounded-lg p-6 bg-surface-light dark:bg-surface-dark text-center">
+    [ Technical Diagram / Flowchart Placeholder ]
+    <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-2">Diagram showing Master Agent orchestrating multiple Worker Nodes.</p>
+</div>
+<h3>The Master Agent</h3>
+<p>The Master Agent evaluates the overall goal and utilizes a strategic planning model (e.g., <code>gpt-4-turbo</code>) to create an execution graph. It handles:</p>
+<ul>
+<li>Task Decomposition</li>
+<li>Dependency Management</li>
+<li>Error Recovery and Retry Logic</li>
+<li>Final Synthesis of results</li>
+</ul>
+<h3>Worker Nodes</h3>
+<p>Worker Nodes are execution units that focus on specific domains. A worker could be specialized in web scraping, data analysis, or executing external APIs. They operate concurrently to speed up the overall task completion.</p>
+<h2>Configuration Example</h2>
+<p>Below is a typical YAML configuration for defining a Cotor system.</p>
+<div class="code-block mt-4 mb-8">
+<div class="bg-border-light dark:bg-border-dark px-4 py-2 flex items-center justify-between text-xs text-text-muted-light dark:text-text-muted-dark rounded-t-md">
+<span>cotor.yaml</span>
+<button class="hover:text-text-light dark:hover:text-text-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+                        Copy
+                    </button>
+</div>
+<pre class="!rounded-t-none !mb-0 !bg-transparent"><code class="language-yaml text-text-light dark:text-text-dark"><span class="text-[#cf222e] dark:text-[#ff7b72]">version:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">'2.0'</span>
+<span class="text-[#cf222e] dark:text-[#ff7b72]">system:</span>
+  <span class="text-[#cf222e] dark:text-[#ff7b72]">name:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"Research-Cluster"</span>
+  <span class="text-[#cf222e] dark:text-[#ff7b72]">strategy:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"hierarchical"</span>
+  <span class="text-[#cf222e] dark:text-[#ff7b72]">master:</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">model:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"gpt-4-turbo"</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">capabilities:</span> <span class="text-text-light dark:text-text-dark">[delegation, synthesis]</span>
+<span class="text-[#cf222e] dark:text-[#ff7b72]">agents:</span>
+  <span class="text-text-light dark:text-text-dark">-</span> <span class="text-[#cf222e] dark:text-[#ff7b72]">name:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"Data-Gatherer"</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">role:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"Web Scraping &amp; API Interaction"</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">tools:</span> <span class="text-text-light dark:text-text-dark">[browser, serp_api]</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">concurrency:</span> <span class="text-[#0550ae] dark:text-[#79c0ff]">5</span>
+  <span class="text-text-light dark:text-text-dark">-</span> <span class="text-[#cf222e] dark:text-[#ff7b72]">name:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"Analyst"</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">role:</span> <span class="text-[#0a3069] dark:text-[#a5d6ff]">"Data Processing &amp; Summarization"</span>
+    <span class="text-[#cf222e] dark:text-[#ff7b72]">dependencies:</span> <span class="text-text-light dark:text-text-dark">["Data-Gatherer"]</span></code></pre>
+</div>
+</div>
+</main>
+<aside class="w-64 hidden lg:block flex-shrink-0 py-6 px-4">
+<h4 class="text-xs font-semibold text-text-light dark:text-text-dark uppercase tracking-wider mb-3">On this page</h4>
+<ul class="text-sm space-y-2 text-text-muted-light dark:text-text-muted-dark border-l border-border-light dark:border-border-dark pl-3">
+<li><a class="hover:text-primary transition-colors block" href="#">Architecture Overview</a></li>
+<li><a class="hover:text-primary transition-colors block pl-3" href="#">The Master Agent</a></li>
+<li><a class="hover:text-primary transition-colors block pl-3" href="#">Worker Nodes</a></li>
+<li><a class="hover:text-primary transition-colors block" href="#">Configuration Example</a></li>
+</ul>
+</aside>
+</div>
+<footer class="border-t border-border-light dark:border-border-dark py-8 mt-auto">
+<div class="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-xs text-text-muted-light dark:text-text-muted-dark gap-4">
+<div class="flex items-center gap-2">
+<svg aria-hidden="true" class="fill-current text-text-muted-light dark:text-text-muted-dark opacity-50" data-view-component="true" height="24" version="1.1" viewBox="0 0 16 16" width="24">
+<path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+</svg>
+<span>© 2024 Cotor Systems.</span>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Security</a>
+<a class="hover:text-primary transition-colors" href="#">Status</a>
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<a class="hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+<script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        themeToggleBtn.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+    </script>
+</body></html>
